@@ -26,10 +26,11 @@ jobs:
 
           git add .
           git commit -m "Updating version list"
-          git remote remove origin
+          git remote remove origin || {
           git remote add origin https://${{ github.token }}@github.com/${{ github.repository }}
           git push origin main
           git remote remove origin
+          }
 
       - name: Create a release
         run: |
