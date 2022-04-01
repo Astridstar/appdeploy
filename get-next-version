@@ -1,0 +1,18 @@
+#!/bin/bash
+
+cat "version.txt" | while read line || [[ -n $line ]];
+do
+    echo "$line"
+    if [ "$line" == "null" ]
+    then
+        echo "Null version tag"
+        exit
+    fi    
+    if [ "$line" ]
+    then
+        echo "Valid version tag"
+        exit
+    fi
+done
+
+

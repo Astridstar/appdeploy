@@ -2,11 +2,12 @@ name: Release main module
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
 
 env:
   GITHUB_ORG: ${{ github.repository_owner }}
+  VERSION_TAG: "1.0.0"
 
 jobs:
   release:
@@ -26,11 +27,39 @@ jobs:
           git add .
           git commit -m "Updating version list"
           git remote remove origin
-          git remote add origin https://${{ github.token }}@github.com/Astridstar/appdeploy
+          git remote add origin https://${{ github.token }}@github.com/${{ github.repository }}
           git push origin main
           git remote remove origin
 
+      - name: Create a release
+        run: |
+          cat "version.txt" | while read line || [[ -n $line ]];
+          do
+              echo "$line"
+              if [ "$line" == "null" ]
+              then
+                  echo "Null version tag"
+                  exit
+              fi    
+              if [ "$line" ]
+              then
+                  VERSION_TAG=$line
+                  curl -X POST \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    https://${{ github.token }}@api.github.com/repos/${{ github.repository }}/releases \
+                    -d '{
+                      "tag_name":"tag_name",
+                      "generate_release_notes" :
+                      {
+                        "name": "Release $line is now available",
+                        "body": "$( cat Astridstar-release-version.md )"
+                      }
+                    }'                  
+              fi
+          done
 
 
- 
+
+
+
 
