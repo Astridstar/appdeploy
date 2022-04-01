@@ -33,14 +33,67 @@ URL=https://$GITHUB_TOKEN@api.github.com/repos/$REPO/releases
 
 printf "Tag: %s \nNote: %s \nRepo: %s\n" $TAG_NAME $RELEASE_NOTE $REPO
 
-#BODY="tag_name" & ":" & "$( $line )" & "," & "name" & ":" & "Release $( $line ) is now available" & "," & "body" & ":" & "$( cat $RELEASE_NOTE ))"
-BODY=$( printf " \"tag_name\":\"%s\",\"name\":\"Release %s is now available\",\"body\":\"%s\" " $TAG_NAME $TAG_NAME $( cat $RELEASE_NOTE ) )
+function url_encode()
+{
+    #$1 is the file to be encoded  
+    sed 's:\n:%0D%0A%0D%0A:g' -i $1
+    sed 's: :+:g' -i $1
+    sed 's:\!:%21:g' -i $1
+    sed 's:#:%23:g' -i $1
+    sed 's:\$:%24:g' -i $1
+    #sed 's:%:%25:g' -i $1
+    sed 's:&:%26:g' -i $1
+    sed 's:(:%28:g' -i $1
+    sed 's:):%29:g' -i $1
+    sed 's:\*:%2A:g' -i $1
+    sed 's:/:%2F:g' -i $1
+
+    sed 's^:^%3A^g' -i $1
+    sed 's:;:%3B:g' -i $1
+    sed 's:<:%3C:g' -i $1
+    #sed 's:=:%3D:g' -i $1
+    sed 's:>:%3E:g' -i $1
+    sed 's:?:%3F:g' -i $1
+
+    sed 's:@:%40:g' -i $1
+
+    sed 's:\[:%5B:g' -i $1
+    sed 's:\\:%5C:g' -i $1
+    sed 's:\]:%5D:g' -i $1
+    sed 's:\^:%5E:g' -i $1
+
+    sed 's:`:%60:g' -i $1
+
+    sed 's:{:%7B:g' -i $1
+    sed 's:|:%7C:g' -i $1
+    sed 's:}:%7D:g' -i $1
+    sed 's:~:%7E:g' -i $1
+    sed 's:\,:&:g' -i $1
+
+}
+
+
+API_PAYLOAD_FILE=payload.txt
+
+printf "\"tag_name\":\"%s\",\"name\":\"Release %s is now available\",\"body\":\"" $TAG_NAME $TAG_NAME > $API_PAYLOAD_FILE
+
+url_encode $RELEASE_NOTE
+url_encode $API_PAYLOAD_FILE
+
+BODY="$( cat $RELEASE_NOTE )"
+CONTENT="$( cat $API_PAYLOAD_FILE )"
+API_PAYLOAD=$( printf "\"tag_name\":\"%s\",\"name\":\"Release %s is now available\",\"body\":\"Dummy\"" $TAG_NAME $TAG_NAME )
+
+#printf "%s" $API_PAYLOAD > $API_PAYLOAD_FILE
 
 echo $BODY
+echo
+echo $CONTENT
+echo
 
 echo $URL
 curl -X POST \
     -H "Accept: application/vnd.github.v3+json" \
     $URL \
-    -d "{ $BODY }"    
+    -d "{ $API_PAYLOAD }"    
 
