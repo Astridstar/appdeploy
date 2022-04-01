@@ -25,8 +25,10 @@ jobs:
 
           git add .
           git commit -m "Updating version list"
+          git remote remove origin
           git remote add origin https://${{ github.token }}@github.com/Astridstar/appdeploy
           git push orign main
+          git remote remove origin
 
 
 
