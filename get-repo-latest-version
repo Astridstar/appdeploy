@@ -1,0 +1,41 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+  then
+    echo "No repository supplied"
+
+    # Hard-coded values
+    # curl -H "Accept: application/vnd.github.v3+json" https://$WORK@api.github.com/repos/Astridstar/actiontestsys/releases/latest  | jq '. | {tag_name} | flatten' > play.txt
+
+    # sed -i '/\[/d' play.txt
+    # sed -i '/\]/d' play.txt
+    # sed "s/^[ \t]*//" -i play.txt 
+    # sed 's/\"//g' -i play.txt
+
+    # echo $'\nLater version: ' 
+    # cat play.txt
+
+    return
+fi
+
+if [ -z "$2" ]
+  then
+    echo "No version output file supplied"
+    return
+fi
+
+REPO=$1
+VERSION_FILE=$2
+
+# Construct the URL to the repository
+REPO_URL=https://$WORK@api.github.com/repos/$REPO/releases/latest
+#printf '\nRepository URL: %s\n' $REPO_URL 
+
+# Curl base on input
+curl -s -H "Accept: application/vnd.github.v3+json" $REPO_URL  | jq '. | {tag_name} | flatten' > $VERSION_FILE
+
+sed -i '/\[/d' $VERSION_FILE
+sed -i '/\]/d' $VERSION_FILE
+sed "s/^[ \t]*//" -i $VERSION_FILE
+sed 's/\"//g' -i $VERSION_FILE
+

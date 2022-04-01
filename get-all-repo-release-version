@@ -1,0 +1,42 @@
+#!/bin/bash
+
+ORG=$GITHUB_ORG
+ORG_REPO_FILE=$ORG-repo-file.tmp
+ORG_RELEASE_VERSION_LOG=$ORG-release-version.md
+
+printf "\nOrganization for release : %s\n" "$GITHUB_ORG"
+
+# remove old records
+rm $ORG_RELEASE_VERSION_LOG
+
+# Grab the list of repositories belonging to the organization
+./get-org-all-repo "$ORG" "$ORG_REPO_FILE"
+
+printf '\nGetting the latest release version for all repos:\n'
+
+if [ -f "$ORG_REPO_FILE" ]; then
+    printf "%s exists.\n" $ORG_REPO_FILE
+
+    cat $ORG_REPO_FILE | while read line || [[ -n $line ]];
+    do
+        URL_REPO_PART="$ORG/$line"
+        VERSION_FILE="$ORG-$line-version.tmp"
+
+        # do something with $line here
+        ./get-repo-latest-version "$URL_REPO_PART" "$VERSION_FILE"
+
+        #printf '%s version: %s\n' $URL_REPO_PART "$(cat ${VERSION_FILE})" >> $ORG_RELEASE_VERSION_LOG 
+
+        VERSION_TAG=$( cat $VERSION_FILE )
+
+
+        printf '%s release version: [ %s ](https://github.com/%s/releases/tag/%s)\n' $URL_REPO_PART $VERSION_TAG $URL_REPO_PART $VERSION_TAG >> $ORG_RELEASE_VERSION_LOG 
+        printf '\n' >> $ORG_RELEASE_VERSION_LOG
+    done
+
+    # Clean up transient files
+    rm *.tmp
+else 
+    echo "$ORG_REPO_FILE does not exist. Unable to get repositories and their versions"
+fi
+
