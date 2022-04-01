@@ -1,0 +1,46 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+  then
+    echo "No tag names supplied"
+    exit 0
+fi
+
+if [ -z "$2" ]
+  then
+    echo "No release note file supplied"
+    exit 0
+fi
+
+if [ -z "$3" ]
+  then
+    echo "No repository (owner/repo or org/repo) supplied"
+    exit 0
+fi
+
+if [ -z "$4" ]
+  then
+    echo "No github token supplied"
+    exit 0
+fi
+
+
+TAG_NAME=$1
+RELEASE_NOTE=$2
+REPO=$3
+GITHUB_TOKEN=$4
+URL=https://$GITHUB_TOKEN@api.github.com/repos/$REPO/releases
+
+printf "Tag: %s \nNote: %s \nRepo: %s\n" $TAG_NAME $RELEASE_NOTE $REPO
+
+#BODY="tag_name" & ":" & "$( $line )" & "," & "name" & ":" & "Release $( $line ) is now available" & "," & "body" & ":" & "$( cat $RELEASE_NOTE ))"
+BODY=$( printf " \"tag_name\":\"%s\",\"name\":\"Release %s is now available\",\"body\":\"%s\" " $TAG_NAME $TAG_NAME $( cat $RELEASE_NOTE ) )
+
+echo $BODY
+
+echo $URL
+curl -X POST \
+    -H "Accept: application/vnd.github.v3+json" \
+    $URL \
+    -d "{ $BODY }"    
+
