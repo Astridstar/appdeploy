@@ -51,11 +51,9 @@ jobs:
                     https://${{ github.token }}@api.github.com/repos/${{ github.repository }}/releases \
                     -d '{
                       "tag_name":"$line",
-                      "generate_release_notes" :
-                      {
-                        "name": "Release $line is now available",
-                        "body": "$( cat Astridstar-release-version.md )"
-                      }
+                      "generate_release_notes":true,
+                      "name": "Release $line is now available",
+                      "body": "$( cat Astridstar-release-version.md )"
                     }'                  
               fi
           done
