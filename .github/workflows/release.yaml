@@ -47,7 +47,7 @@ jobs:
                 VERSION_TAG=$line
 
                 URL=https://${{ secrets.OWNER_TOKEN }}@api.github.com/repos/${{ github.repository }}/releases
-                BODY=$( printf " \"tag_name\":\"%s\",\"name\":\"Release %s is now available\",\"body\":\"%s\" " $VERSION_TAG $VERSION_TAG $( cat $Astridstar-release-version.md ) )
+                BODY=$( printf " \"tag_name\":\"%s\",\"name\":\"Release %s is now available\",\"body\":\"%s\" " $VERSION_TAG $VERSION_TAG $( cat Astridstar-release-version.md ) )
 
                 echo $BODY
 
