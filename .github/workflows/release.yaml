@@ -41,7 +41,7 @@ jobs:
                 git tag -a $line -m "Release $line"
                 git remote remove origin 
                 git remote add origin https://${{ github.token }}@github.com/${{ github.repository }}
-                git push origin main --all
+                git push origin main --tags
                 git remote remove origin 
                 echo "https://${{ github.token }}@api.github.com/repos/${{ github.repository }}/releases"
                 VERSION_TAG=$line
