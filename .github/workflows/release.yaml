@@ -27,16 +27,14 @@ jobs:
           do
               echo "$line"
               if [ "$line" == "null" ]
-              then
+                then
                   echo "Null version tag"
                   exit
               fi    
               if [ "$line" ]
-              then
-
+                then
                   git config --global user.email "${{ github.actor }}@example.com"
                   git config --global user.name "${{ github.actor }}"
-
                   git add .
                   git commit -m "Updating version list" || {
                   git tag -a $line -m "Release $line"
@@ -44,7 +42,6 @@ jobs:
                   git remote add origin https://${{ github.token }}@github.com/${{ github.repository }}
                   git push origin main
                   git remote remove origin }
-
                   echo "https://${{ github.token }}@api.github.com/repos/${{ github.repository }}/releases"
                   VERSION_TAG=$line
                   curl -X POST \
