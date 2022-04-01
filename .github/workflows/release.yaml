@@ -31,6 +31,10 @@ jobs:
                   echo "Null version tag"
                   exit
               fi 
+              if [ "$line" ]
+                then
+                echo "Release version" $line
+              fi
           done
 
 
