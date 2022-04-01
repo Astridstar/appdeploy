@@ -16,7 +16,15 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Get all repository
-        run: ./get-all-repo-release-version ${{ env.GITHUB_ORG }}
+        run: |
+          ./get-all-repo-release-version ${{ env.GITHUB_ORG }}
+          cat Astridstar-release-version.md
+          
+          git add .
+          git commit -m "Updating version list"
+          git remote origin set-URL https://${{ github.token }}@github.com/Astridstar/appdeploy
+
+
 
  
 
