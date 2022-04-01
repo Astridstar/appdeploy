@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get all repository
-        run: ./get-all-repo-release-version ${{ env.GITHUB_ORG }
+        run: ./get-all-repo-release-version ${{ env.GITHUB_ORG }}
 
  
 
