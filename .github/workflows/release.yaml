@@ -21,10 +21,8 @@ jobs:
           ./get-all-repo-release-version ${{ env.GITHUB_ORG }}
           cat Astridstar-release-version.md
 
-
       - name: Create a release
         run: |
-                  
           cat "version.txt" | while read line || [[ -n $line ]];
           do
               echo "$line"
