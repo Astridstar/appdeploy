@@ -1,0 +1,43 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+  then
+    echo "No organizations supplied"
+
+    # Hard-coded values
+    curl -H "Accept: application/vnd.github.v3+json" https://$WORK@api.github.com/users/Astridstar/repos | jq '.[] | {name} | flatten' > repos.txt
+
+    sed -i '/\[/d' repos.txt
+    sed -i '/\]/d' repos.txt
+    sed "s/^[ \t]*//" -i repos.txt 
+    sed 's/\"//g' -i repos.txt
+
+    echo $'\nRepository Lists: ' 
+    cat repos.txt
+
+    exit
+fi
+
+if [ -z "$2" ]
+  then
+    echo "No organization output file supplied"
+    exit
+fi
+
+ORG=$1
+ORG_REPO_FILE=$2
+
+# Construct the URL to the repository
+ORG_URL=https://$WORK@api.github.com/users/$ORG/repos   # For non-org users
+#ORG_URL=https://$WORK@api.github.com/orgs/$ORG/repos   # For organizations
+#printf '\ORG URL: %s\n' $ORG_URL 
+
+curl -s -H "Accept: application/vnd.github.v3+json" $ORG_URL | jq '.[] | {name} | flatten' > $ORG_REPO_FILE
+
+sed -i '/\[/d' $ORG_REPO_FILE
+sed -i '/\]/d' $ORG_REPO_FILE
+sed "s/^[ \t]*//" -i $ORG_REPO_FILE
+sed 's/\"//g' -i $ORG_REPO_FILE
+
+# echo $'\nRepository Lists: ' 
+# cat $ORG_REPO_FILE 
