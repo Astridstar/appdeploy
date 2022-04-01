@@ -34,6 +34,16 @@ jobs:
               if [ "$line" ]
                 then
                 echo "Release version" $line
+                git config --global user.email "${{ github.actor }}@example.com"
+                git config --global user.name "${{ github.actor }}"
+                git add .
+                git commit -m "Updating version list" || {
+                git tag -a $line -m "Release $line"
+                git remote remove origin 
+                git remote add origin https://${{ github.token }}@github.com/${{ github.repository }}
+                git push origin main
+                git remote remove origin 
+                }
               fi
           done
 
