@@ -25,7 +25,9 @@ jobs:
 
           git add .
           git commit -m "Updating version list"
+          git remote add origin
           git remote origin set-URL https://${{ github.token }}@github.com/Astridstar/appdeploy
+          git push orign main
 
 
 
