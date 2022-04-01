@@ -1,6 +1,6 @@
 Astridstar/actiontestsys release version: [ v2.0.0 ](https://github.com/Astridstar/actiontestsys/releases/tag/v2.0.0)
 
-Astridstar/appdeploy release version: [ null ](https://github.com/Astridstar/appdeploy/releases/tag/null)
+Astridstar/appdeploy release version: [ 1.0.0 ](https://github.com/Astridstar/appdeploy/releases/tag/1.0.0)
 
 Astridstar/apptestsys release version: [ v5.0.0 ](https://github.com/Astridstar/apptestsys/releases/tag/v5.0.0)
 
